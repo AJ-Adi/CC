@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Currency Calculator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-4">
+  <div class="max-w-md mx-auto bg-white shadow-lg rounded-2xl p-6">
+    <h1 class="text-2xl font-bold mb-4 text-center">Currency Calculator</h1>
+    <table class="w-full text-sm border border-gray-300 rounded-lg">
+      <thead>
+        <tr class="bg-gray-200">
+          <th class="p-2 text-left">Denomination</th>
+          <th class="p-2 text-left">Count</th>
+          <th class="p-2 text-left">Total</th>
+        </tr>
+      </thead>
+      <tbody id="currency-table"></tbody>
+    </table>
+
+    <div class="mt-4 flex justify-between items-center">
+      <button id="clear-btn" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Clear</button>
+      <div class="text-lg font-semibold">
+        Grand Total: <span id="grand-total">0</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const denominations = [500, 200, 100, 50, 20, 10, 5, 2, 1];
+
+    const tableBody = document.getElementById("currency-table");
+    const grandTotalEl = document.getElementById("grand-total");
+
+    denominations.forEach(denom => {
+      const row = document.createElement("tr");
+      row.classList.add("border-b");
+
+      row.innerHTML = `
+        <td class="p-2">₹${denom}</td>
+        <td class="p-2">
+          <input type="number" min="0" value="0" class="count-input w-20 p-1 border rounded" data-denom="${denom}">
+        </td>
+        <td class="p-2 total-cell" id="total-${denom}">0</td>
+      `;
+      tableBody.appendChild(row);
+    });
+
+    function calculateTotal() {
+      let grandTotal = 0;
+      document.querySelectorAll(".count-input").forEach(input => {
+        const denom = parseInt(input.dataset.denom);
+        const count = parseInt(input.value) || 0;
+        const total = denom * count;
+        document.getElementById(`total-${denom}`).innerText = total;
+        grandTotal += total;
+      });
+      grandTotalEl.innerText = grandTotal;
+    }
+
+    document.querySelectorAll(".count-input").forEach(input => {
+      input.addEventListener("input", calculateTotal);
+    });
+
+    document.getElementById("clear-btn").addEventListener("click", () => {
+      document.querySelectorAll(".count-input").forEach(input => input.value = 0);
+      document.querySelectorAll(".total-cell").forEach(cell => cell.innerText = 0);
+      grandTotalEl.innerText = 0;
+    });
+  </script>
+</body>
+</html>
