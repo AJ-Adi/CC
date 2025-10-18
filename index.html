@@ -2,28 +2,73 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Currency Calculator</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 p-4">
-  <div class="max-w-md mx-auto bg-white shadow-lg rounded-2xl p-6">
-    <h1 class="text-2xl font-bold mb-4 text-center">Currency Calculator</h1>
-    <table class="w-full text-sm border border-gray-300 rounded-lg">
-      <thead>
-        <tr class="bg-gray-200">
-          <th class="p-2 text-left">Denomination</th>
-          <th class="p-2 text-left">Count</th>
-          <th class="p-2 text-left">Total</th>
-        </tr>
-      </thead>
-      <tbody id="currency-table"></tbody>
-    </table>
+<body class="bg-gray-100 min-h-screen p-2 sm:p-4">
+  <div class="max-w-md mx-auto bg-white shadow-lg rounded-2xl p-4 sm:p-6">
+    <h1 class="text-xl sm:text-2xl font-bold mb-4 text-center text-gray-800">Currency Calculator</h1>
+    
+    <!-- Mobile-friendly table with horizontal scroll -->
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border border-gray-300 rounded-lg min-w-full">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="p-2 sm:p-3 text-left font-semibold text-gray-700">Denomination</th>
+            <th class="p-2 sm:p-3 text-left font-semibold text-gray-700">Count</th>
+            <th class="p-2 sm:p-3 text-left font-semibold text-gray-700">Total</th>
+          </tr>
+        </thead>
+        <tbody id="currency-table"></tbody>
+      </table>
+    </div>
 
-    <div class="mt-4 flex justify-between items-center">
-      <button id="clear-btn" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Clear</button>
-      <div class="text-lg font-semibold">
-        Grand Total: <span id="grand-total">0</span>
+    <!-- Bundle System Display -->
+    <div class="mt-6 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-4 border border-purple-200">
+      <h2 class="text-lg font-bold text-center mb-4 text-purple-800">Bundle System</h2>
+      <p class="text-sm text-center text-gray-600 mb-4">Applies to: ₹50, ₹20, ₹10, ₹5, ₹2, ₹1 (100 notes = 1 bundle)</p>
+      
+      <!-- Double Lock (Bundles) -->
+      <div class="bg-white rounded-lg p-3 mb-3 border-2 border-purple-300">
+        <h3 class="font-semibold text-purple-700 mb-2 flex items-center">
+          🔒🔒 Double Lock (Bundles)
+        </h3>
+        <div class="grid grid-cols-2 gap-2 text-sm">
+          <div class="bg-purple-100 p-2 rounded">
+            <span class="font-medium">Total Bundles:</span>
+            <span id="total-bundles" class="font-bold text-purple-800">0</span>
+          </div>
+          <div class="bg-purple-100 p-2 rounded">
+            <span class="font-medium">Bundle Value:</span>
+            <span id="bundle-value" class="font-bold text-purple-800">₹0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Single Lock (Remaining) -->
+      <div class="bg-white rounded-lg p-3 mb-3 border-2 border-blue-300">
+        <h3 class="font-semibold text-blue-700 mb-2 flex items-center">
+          🔒 Single Lock (Remaining)
+        </h3>
+        <div class="grid grid-cols-2 gap-2 text-sm">
+          <div class="bg-blue-100 p-2 rounded">
+            <span class="font-medium">Remaining Notes:</span>
+            <span id="remaining-notes" class="font-bold text-blue-800">0</span>
+          </div>
+          <div class="bg-blue-100 p-2 rounded">
+            <span class="font-medium">Remaining Value:</span>
+            <span id="remaining-value" class="font-bold text-blue-800">₹0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile-friendly controls -->
+    <div class="mt-4 flex flex-col sm:flex-row justify-between items-center gap-3">
+      <button id="clear-btn" class="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 active:bg-red-700 transition-colors w-full sm:w-auto text-base font-medium">Clear All</button>
+      <div class="text-base sm:text-lg font-semibold bg-blue-50 px-4 py-2 rounded-lg border border-blue-200 w-full sm:w-auto text-center">
+        Grand Total: ₹<span id="grand-total">0</span>
       </div>
     </div>
   </div>
@@ -33,31 +78,61 @@
 
     const tableBody = document.getElementById("currency-table");
     const grandTotalEl = document.getElementById("grand-total");
+    const totalBundlesEl = document.getElementById("total-bundles");
+    const bundleValueEl = document.getElementById("bundle-value");
+    const remainingNotesEl = document.getElementById("remaining-notes");
+    const remainingValueEl = document.getElementById("remaining-value");
 
     denominations.forEach(denom => {
       const row = document.createElement("tr");
-      row.classList.add("border-b");
+      row.classList.add("border-b", "hover:bg-gray-50");
 
       row.innerHTML = `
-        <td class="p-2">₹${denom}</td>
-        <td class="p-2">
-          <input type="number" min="0" value="0" class="count-input w-20 p-1 border rounded" data-denom="${denom}">
+        <td class="p-2 sm:p-3 font-medium text-gray-800">₹${denom}</td>
+        <td class="p-2 sm:p-3">
+          <input type="number" min="0" value="0" class="count-input w-20 sm:w-24 p-2 sm:p-3 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base" data-denom="${denom}" inputmode="numeric">
         </td>
-        <td class="p-2 total-cell" id="total-${denom}">0</td>
+        <td class="p-2 sm:p-3 total-cell font-semibold text-green-600" id="total-${denom}">₹0</td>
       `;
       tableBody.appendChild(row);
     });
 
     function calculateTotal() {
       let grandTotal = 0;
+      let totalBundles = 0;
+      let bundleValue = 0;
+      let remainingNotes = 0;
+      let remainingValue = 0;
+
+      // Define which denominations should be included in bundle calculations
+      const bundleDenominations = [50, 20, 10, 5, 2, 1];
+
       document.querySelectorAll(".count-input").forEach(input => {
         const denom = parseInt(input.dataset.denom);
         const count = parseInt(input.value) || 0;
         const total = denom * count;
-        document.getElementById(`total-${denom}`).innerText = total;
+        document.getElementById(`total-${denom}`).innerText = `₹${total}`;
         grandTotal += total;
+
+        // Only calculate bundles for smaller denominations (50, 20, 10, 5, 2, 1)
+        if (bundleDenominations.includes(denom)) {
+          // Calculate bundles (100 notes = 1 bundle)
+          const bundles = Math.floor(count / 100);
+          const remaining = count % 100;
+          
+          totalBundles += bundles;
+          bundleValue += bundles * denom * 100;
+          remainingNotes += remaining;
+          remainingValue += remaining * denom;
+        }
       });
+
+      // Update display
       grandTotalEl.innerText = grandTotal;
+      totalBundlesEl.innerText = totalBundles;
+      bundleValueEl.innerText = `₹${bundleValue}`;
+      remainingNotesEl.innerText = remainingNotes;
+      remainingValueEl.innerText = `₹${remainingValue}`;
     }
 
     document.querySelectorAll(".count-input").forEach(input => {
@@ -66,8 +141,14 @@
 
     document.getElementById("clear-btn").addEventListener("click", () => {
       document.querySelectorAll(".count-input").forEach(input => input.value = 0);
-      document.querySelectorAll(".total-cell").forEach(cell => cell.innerText = 0);
+      document.querySelectorAll(".total-cell").forEach(cell => cell.innerText = "₹0");
       grandTotalEl.innerText = 0;
+      
+      // Reset bundle system
+      totalBundlesEl.innerText = 0;
+      bundleValueEl.innerText = "₹0";
+      remainingNotesEl.innerText = 0;
+      remainingValueEl.innerText = "₹0";
     });
   </script>
 </body>
