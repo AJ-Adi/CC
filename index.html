@@ -38,18 +38,18 @@
   </style>
 </head>
 <body class="bg-gray-100 min-h-screen p-1 sm:p-4">
-  <div class="max-w-full mx-auto bg-white shadow-lg rounded-lg p-2 sm:p-6">
+  <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-2 sm:p-6">
     <h1 class="text-lg sm:text-2xl font-bold mb-3 sm:mb-4 text-center text-gray-800">Currency Calculator</h1>
     
     <!-- Mobile-optimized table with horizontal scroll -->
-    <div class="overflow-x-auto -mx-1 sm:mx-0">
-      <table class="w-full mobile-table border border-gray-300 rounded-lg" style="min-width: 600px;">
+    <div class="overflow-x-auto">
+      <table class="w-full mobile-table border border-gray-300 rounded-lg" style="min-width: 500px;">
         <thead>
           <tr class="bg-gray-200">
-            <th class="p-1 sm:p-3 text-left font-semibold text-gray-700 border-r mobile-text">Denomination</th>
-            <th class="p-1 sm:p-3 text-left font-semibold text-gray-700 border-r mobile-text">Count</th>
-            <th class="p-1 sm:p-3 text-left font-semibold text-gray-700 border-r mobile-text">DL</th>
-            <th class="p-1 sm:p-3 text-left font-semibold text-gray-700 mobile-text">SL</th>
+            <th class="p-2 sm:p-3 text-left font-semibold text-gray-700 border-r mobile-text w-20">Denomination</th>
+            <th class="p-2 sm:p-3 text-left font-semibold text-gray-700 border-r mobile-text w-20">Count</th>
+            <th class="p-2 sm:p-3 text-left font-semibold text-gray-700 border-r mobile-text w-24">DL</th>
+            <th class="p-2 sm:p-3 text-left font-semibold text-gray-700 mobile-text w-24">SL</th>
           </tr>
         </thead>
         <tbody id="currency-table"></tbody>
@@ -104,12 +104,12 @@
       row.classList.add("border-b", "hover:bg-gray-50");
 
       row.innerHTML = `
-        <td class="p-1 sm:p-3 font-medium text-gray-800 border-r mobile-text">₹${denom}</td>
-        <td class="p-1 sm:p-3 border-r">
-          <input type="number" min="0" value="0" class="count-input mobile-input w-12 sm:w-24 p-1 sm:p-3 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base touch-target" data-denom="${denom}" inputmode="numeric">
+        <td class="p-2 sm:p-3 font-medium text-gray-800 border-r mobile-text w-20">₹${denom}</td>
+        <td class="p-2 sm:p-3 border-r w-20">
+          <input type="number" min="0" value="0" class="count-input mobile-input w-16 sm:w-20 p-1 sm:p-2 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base touch-target" data-denom="${denom}" inputmode="numeric">
         </td>
-        <td class="p-1 sm:p-3 border-r font-semibold text-purple-600 mobile-total" id="dl-${denom}">₹0</td>
-        <td class="p-1 sm:p-3 font-semibold text-blue-600 mobile-total" id="sl-${denom}">₹0</td>
+        <td class="p-2 sm:p-3 border-r font-semibold text-purple-600 mobile-total w-24" id="dl-${denom}">₹0</td>
+        <td class="p-2 sm:p-3 font-semibold text-blue-600 mobile-total w-24" id="sl-${denom}">₹0</td>
       `;
       tableBody.appendChild(row);
     });
